@@ -5,6 +5,7 @@ const FPS = 30; // frames per second
             const ROIDS_SIZE = 100; // starting size of asteroid in pixels
             const ROIDS_SPD = 50; // max starting speed of asteroids in pixels per second
             const ROIDS_VERT = 10; // average number vertices on each asteroid
+            const SHIP_EXPLODE_DUR = 0.4; // duration of the ship explosion
             const SHIP_SIZE = 30; // ship height in pixels
             const SHIP_THRUST = 5; // acceleration of ship in pixels per second per second
             const TURN_SPEED = 360; // turn speed in degress per second
@@ -14,11 +15,14 @@ const FPS = 30; // frames per second
             var canv = document.getElementById("gameCanvas");
             var ctx = canv.getContext("2d");
 
+            // set up the spaceship object
+
             var ship = {
                 x: canv.width / 2,
                 y: canv.height / 2,
                 r: SHIP_SIZE / 2,
                 a: 90 / 180 * Math.PI, // convert to radians
+                explodeTime: 0,
                 rot: 0,
                 thrusting: false,
                 thrust: {
@@ -55,6 +59,10 @@ const FPS = 30; // frames per second
 
             function distBetweenPoints(x1, y1, x2, y2){
                 return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            }
+
+            function explodeShip(){
+                ship.explodeTime = Math.ceil(SHIP_EXPLODE_DUR * FPS);
             }
 
             function keyDown(/** @type {keyboardEvent}*/ ev) {
@@ -112,6 +120,8 @@ const FPS = 30; // frames per second
             }
 
             function update(){
+                var exploding = ship.explodeTime > 0;
+
                 // draw space
                 ctx.fillStyle = "black";
                 ctx.fillRect(0, 0, canv.width, canv.height);
@@ -245,11 +255,10 @@ const FPS = 30; // frames per second
 
                 // move the asteroid
 
-                for (var i = 0; i < roids.length; i++){
-                
-                roids[i].x += roids[i].xv;
-                roids[i].x += roids[i].yv;
-
+                for (var i = 0; i < roids.length; i++) {
+                    roids[i].x += roids[i].xv;
+                    roids[i].y += roids[i].yv;
+    
                 // handle edge of screen
                 if (roids[i].x < 0 - roids[i].r){
                     roids[i].x = canv.width + roids[i].r;
@@ -265,10 +274,11 @@ const FPS = 30; // frames per second
 
         }
 
+}
                 //centre dot
                 // ctx.fillStyle = "red";
                 // ctx.fillRect(ship.x - 1, ship.y -1, 2, 2);
             
                 // console.log("Asteroid position:", roids[i].x, roids[i].y);
                 // console.log("Asteroid:", roids[i]);
-            }    
+    
