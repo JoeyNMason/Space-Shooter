@@ -9,7 +9,7 @@ const FPS = 30; // frames per second
             const SHIP_SIZE = 30; // ship height in pixels
             const SHIP_THRUST = 5; // acceleration of ship in pixels per second per second
             const TURN_SPEED = 360; // turn speed in degress per second
-            const SHOW_BOUNDING = true; // show or hide collision bounding
+            const SHOW_BOUNDING = false; // show or hide collision bounding
 
             /** @type {HTMLCanvasElement} */
             var canv = document.getElementById("gameCanvas");
@@ -132,6 +132,7 @@ const FPS = 30; // frames per second
                     ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) /FPS;
 
                         // draw the thruster
+                        if (!exploding){
                         ctx.fillStyle = "red";
                         ctx.strokeStyle = "yellow";
                         ctx.lineWidth = SHIP_SIZE / 10;
@@ -153,6 +154,7 @@ const FPS = 30; // frames per second
                         ctx.closePath();
                         ctx.fill();
                         ctx.stroke();
+                    }
 
                 } else {  
                     ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
@@ -161,6 +163,7 @@ const FPS = 30; // frames per second
 
 
                 // draw triangular ship 
+                if (!exploding){
                 ctx.strokeStyle = "white";
                 ctx.lineWidth = SHIP_SIZE / 20;
                 ctx.beginPath();
@@ -180,6 +183,29 @@ const FPS = 30; // frames per second
                 );
                 ctx.closePath();
                 ctx.stroke();
+                } else {
+                    // draw the explosion
+                    ctx.fillStyle = "darkred";
+                    ctx.beginPath();
+                    ctx.arc(ship.x, ship.y, ship.r * 1.7, 0, Math.PI * 2, false);
+                    ctx.fill();
+                    ctx.fillStyle = "red";
+                    ctx.beginPath();
+                    ctx.arc(ship.x, ship.y, ship.r * 1.4, 0, Math.PI * 2, false);
+                    ctx.fill();
+                    ctx.fillStyle = "orange";
+                    ctx.beginPath();
+                    ctx.arc(ship.x, ship.y, ship.r * 1.1, 0, Math.PI * 2, false);
+                    ctx.fill();
+                    ctx.fillStyle = "yellow";
+                    ctx.beginPath();
+                    ctx.arc(ship.x, ship.y, ship.r * 0.8, 0, Math.PI * 2, false);
+                    ctx.fill();
+                    ctx.fillStyle = "white";
+                    ctx.beginPath();
+                    ctx.arc(ship.x, ship.y, ship.r * 0.5, 0, Math.PI * 2, false);
+                    ctx.fill();
+                }
 
                 if (SHOW_BOUNDING){
                     ctx.strokeStyle = "lime";
