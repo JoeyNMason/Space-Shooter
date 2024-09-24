@@ -1,6 +1,8 @@
 const FPS = 30; // frames per second
             const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
             const ROIDS_NUM = 3; // starting number of asteroids
+            const LASER_MAX = 10; // max number of lazers on screen at once 
+            const LASER_SPD = 500; //  speed of lasers in pix in seconds 
             const ROIDS_JAG = 0.3; // jaggerdness of the asteroids (0 = none 1 = lots)
             const ROIDS_SIZE = 100; // starting size of asteroid in pixels
             const ROIDS_SPD = 50; // max starting speed of asteroids in pixels per second
@@ -57,6 +59,10 @@ const FPS = 30; // frames per second
 
             function keyDown(/** @type {keyboardEvent}*/ ev) {
                 switch(ev.keyCode) {
+                    case 32: // space bar (shoot laser)
+                    shootLaser();
+
+                    break;
                     case 37: // left arrow key (rotate ship left)
                         ship.rot = TURN_SPEED / 180 * Math.PI / FPS;
 
@@ -74,6 +80,10 @@ const FPS = 30; // frames per second
 
             function keyUp(/** @type {keyboardEvent}*/ ev){
                 switch(ev.keyCode) {
+                    case 32: // space bar (allow shooting)
+                    ship.canShoot = true;
+
+                    break;
                     case 37: // left arrow key (stop rotating left)
                         ship.rot = 0;
 
@@ -118,7 +128,9 @@ const FPS = 30; // frames per second
                         a: 90 / 180 * Math.PI, // convert to radians
                         blinkNum: Math.ceil(SHIP_INV_DUR / SHIP_BLINK_DUR),
                         blinkTime: Math.ceil(SHIP_BLINK_DUR * FPS),
+                        canShoot: true,
                         explodeTime: 0,
+                        lasers: [],
                         rot: 0,
                         thrusting: false,
                         thrust: {
@@ -127,6 +139,12 @@ const FPS = 30; // frames per second
                         
                     }
                 }
+            }
+
+            function shootLaser(){
+                // create laser object
+
+                // prevent further shooting 
             }
 
             function update(){
