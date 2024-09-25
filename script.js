@@ -143,8 +143,17 @@ const FPS = 30; // frames per second
 
             function shootLaser(){
                 // create laser object
+                if(ship.canShoot && ship.lasers.length < LASER_MAX){
+                    ship.lasers.push({ // from the nose of the ship
+                        x: ship.x + 4 / 3 * ship.r * Math.cos(ship.a),
+                        y: ship.y - 4 / 3 * ship.r * Math.sin(ship.a),
+                        xv: LASER_SPD * Math.cos(ship.a) / FPS,
+                        yv: -LASER_SPD * Math.sin(ship.a) / FPS
+                    });
+                }
 
                 // prevent further shooting 
+                ship.canShoot = false;
             }
 
             function update(){
@@ -299,6 +308,14 @@ const FPS = 30; // frames per second
                         ctx.stroke();
                     }
 
+                // draw lasers 
+                for(var i = 0; i < ship.lasers.length; i++){
+                    ctx.fillStyle = "salmon";
+                    ctx.beginPath();
+                    ctx.arc(ship.lasers[i].x, ship.lasers[i].y, SHIP_SIZE / 15, 0, Math.PI * 2, false);
+                    ctx.fill();
+                }
+
                 // check for asteroid collisions
                 if (!exploding){
                     if(ship.blinkNum == 0) {
@@ -335,13 +352,30 @@ const FPS = 30; // frames per second
                     ship.y = 0 - ship.r;
                 }
 
-                // move the asteroid
+                // move the lasers
+                for(var i = 0; i < ship.lasers.length; i++){
+                    ship.lasers[i].x += ship.lasers[i].xv;
+                    ship.lasers[i].y += ship.lasers[i].yv;
 
+                    // handle laser edge of screen
+                    if (ship.lasers[i].x < 0){
+                        ship.lasers[i].x = canv.width;
+                    } else if (ship.lasers[i].x > canv.width){
+                        ship.lasers.x = 0;
+                    }
+                    if (ship.lasers[i].y < 0){
+                        ship.lasers[i].y = canv.height;
+                    } else if (ship.lasers[i].y > canv.height){
+                        ship.lasers.y = 0;
+                    }
+                }
+
+                // move the asteroid
                 for (var i = 0; i < roids.length; i++) {
                     roids[i].x += roids[i].xv;
                     roids[i].y += roids[i].yv;
     
-                // handle edge of screen
+                // handle asteroid edge of screen
                 if (roids[i].x < 0 - roids[i].r){
                     roids[i].x = canv.width + roids[i].r;
                 } else if (roids[i].x > canv.width + roids[i].r){
