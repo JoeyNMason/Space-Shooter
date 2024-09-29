@@ -101,6 +101,10 @@
             ship.explodeTime = Math.ceil(SHIP_EXPLODE_DUR * FPS);
         }
 
+        function gameOver(){
+            
+        }
+
         function keyDown(/** @type {KeyboardEvent} */ ev) {
             switch(ev.keyCode) {
                 case 32: // space bar (shoot laser)
@@ -435,7 +439,12 @@
 
                 // reset the ship after the explosion has finished
                 if (ship.explodeTime == 0) {
+                    lives--;
+                    if(lives == 0){
+                        gameOver();
+                    } else {
                     ship = newShip();
+                    }
                 }
             }
 
